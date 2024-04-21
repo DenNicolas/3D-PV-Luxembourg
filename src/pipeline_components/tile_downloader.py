@@ -54,10 +54,10 @@ class TileDownloader(object):
         self.not_downloaded_path = Path(f"logs/downloading/{configuration.get('county4analysis')}_notDownloadedTiles.csv")
 
         # URL dummy for image request from open NRW server
-        self.WMS_1 = 'https://www.wms.nrw.de/geobasis/wms_nw_dop?SERVICE=WMS&REQUEST=GetMap&Version=1.1.1&LAYERS=nw_dop_rgb&SRS=EPSG:4326&BBOX='
+        self.WMS_1 = 'https://wmts1.geoportail.lu/opendata/service?REQUEST=GetMap&VERSION=1.1.1&SERVICE=WMS&BBOX='
 
-        self.WMS_2 = '&WIDTH=4800&HEIGHT=4800&FORMAT=image/png;%20mode=8bit'
-
+        self.WMS_2 = '&SRS=EPSG:4326&format=image/png&layers=ortho_latest&WIDTH=4800&HEIGHT=4800&STYLES'
+        
         self.NUM_THREADS = 4
 
         download_threads = []

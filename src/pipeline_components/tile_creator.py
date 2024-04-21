@@ -40,11 +40,11 @@ class TileCreator(object):
         self.radius = 6371000
         self.side = 240
 
-        # Bounding box coordinates for NRW, i.e. North, South, East, West
-        self.N = 52.7998
-        self.S = 50.0578
-        self.E = 9.74158
-        self.W = 5.59334
+        # Bounding box coordinates for LUX, i.e. North, South, East, West
+        self.N = 50.1850
+        self.S = 49.4379
+        self.E = 6.54617
+        self.W = 5.72009
 
         self.polygon = county_handler.polygon
 

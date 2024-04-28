@@ -14,7 +14,7 @@ run_tile_creator: 0
 
 run_tile_downloader: 0
 
-run_tile_processor: 0
+run_tile_processor: 1
 
 run_tile_coords_updater: 1
 

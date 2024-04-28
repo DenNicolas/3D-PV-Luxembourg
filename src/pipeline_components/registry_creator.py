@@ -141,7 +141,7 @@ class RegistryCreator:
         raw_PV_installations_on_rooftop["Street_Address"] = (
             raw_PV_installations_on_rooftop["Street"]
             + " "
-            + raw_PV_installations_on_rooftop["StreetNumb"]
+            + raw_PV_installations_on_rooftop["StreetNumber"]
             + ", "
             + raw_PV_installations_on_rooftop["PostalCode"]
             + ", "
@@ -485,13 +485,13 @@ class RegistryCreator:
                     "identifier",
                     "Area",
                     "Azimuth",
-                    "Building_I",
+                    "Building_ID",
                     "City",
                     "PostalCode",
                     "RoofTopID",
-                    "RooftopTyp",
+                    "RooftopType",
                     "Street",
-                    "StreetNumb",
+                    "StreetNumber",
                     "Tilt",
                     "area_inter",
                     "geometry_overhanging_polygon",
@@ -563,13 +563,13 @@ class RegistryCreator:
                 "identifier",
                 "Area",
                 "Azimuth",
-                "Building_I",
+                "Building_ID",
                 "City",
                 "PostalCode",
                 "RoofTopID",
-                "RooftopTyp",
+                "RooftopType",
                 "Street",
-                "StreetNumb",
+                "StreetNumber",
                 "Tilt",
                 "area_inter",
                 "geometry",
@@ -671,6 +671,11 @@ class RegistryCreator:
         # standard tilt of 32 degrees
         # 2. PV panels are tilted in the same way as their underlying rooftop. On flat roofs, we assume a tilt angle
         # of 32 degrees
+        
+        
+        #added a conversion to int to avoid TypeError
+        raw_PV_installations_on_rooftop['Tilt'] = pd.to_numeric(raw_PV_installations_on_rooftop['Tilt'], errors='coerce')
+
         raw_PV_installations_on_rooftop["Tilt"][
             raw_PV_installations_on_rooftop["Tilt"] >= 60
         ] = 32

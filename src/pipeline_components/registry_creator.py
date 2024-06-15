@@ -81,9 +81,9 @@ class RegistryCreator:
         self.rooftop_gdf.crs = {"init": "epsg:4326"}
 
         self.bing_key = configuration["bing_key"]
-
+        
         self.corrected_PV_installations_on_rooftop = self.preprocess_raw_pv_polygons(
-            self.raw_PV_polygons_gdf, self.rooftop_gdf
+        self.raw_PV_polygons_gdf, self.rooftop_gdf
         )
 
     def preprocess_raw_pv_polygons(
@@ -117,23 +117,24 @@ class RegistryCreator:
             raw_PV_installations_gdf, rooftop_gdf
         )
 
+
         raw_overhanging_PV_installations = (
             self.identify_raw_overhanging_PV_installations(
-                raw_PV_installations_off_rooftop
+            raw_PV_installations_off_rooftop
             )
         )
 
         raw_overhanging_PV_installations = (
-            self.filter_raw_overhanging_PV_installations_by_area(
-                raw_overhanging_PV_installations,
-                raw_PV_installations_on_rooftop,
+        self.filter_raw_overhanging_PV_installations_by_area(
+            raw_overhanging_PV_installations,
+            raw_PV_installations_on_rooftop,
             )
         )
 
         raw_PV_installations_on_rooftop = (
-            self.append_raw_overhanging_PV_installations_to_intersected_installations(
-                raw_overhanging_PV_installations,
-                raw_PV_installations_on_rooftop,
+        self.append_raw_overhanging_PV_installations_to_intersected_installations(
+            raw_overhanging_PV_installations,
+            raw_PV_installations_on_rooftop,
             )
         )
 
@@ -189,7 +190,7 @@ class RegistryCreator:
 
         # Compute the raw area for each pv installation
         raw_PV_installations_gdf["raw_area"] = (
-            raw_PV_installations_gdf["geometry"].to_crs(epsg=5243).area
+            raw_PV_installations_gdf["geometry"].to_crs(epsg=2169).area
         )
 
         # Create a unique identifier for each pv installation
@@ -226,7 +227,7 @@ class RegistryCreator:
         )
 
         raw_PV_installations_on_rooftop["area_inter"] = (
-            raw_PV_installations_on_rooftop["geometry"].to_crs(epsg=5243).area
+            raw_PV_installations_on_rooftop["geometry"].to_crs(epsg=2169).area
         )
 
         # PV polygons which are not on rooftops. This includes free-standing PV units and geometries overhanging from rooftops
@@ -235,14 +236,16 @@ class RegistryCreator:
         )
 
         raw_PV_installations_off_rooftop["area_diff"] = (
-            raw_PV_installations_off_rooftop["geometry"].to_crs(epsg=5243).area
+            raw_PV_installations_off_rooftop["geometry"].to_crs(epsg=2169).area
         )
+
 
         return [raw_PV_installations_on_rooftop, raw_PV_installations_off_rooftop]
 
     def _ckdnearest(
         self, gdA: gpd.GeoDataFrame = None, gdB: gpd.GeoDataFrame = None
     ) -> gpd.GeoDataFrame:
+        
         """
         Identifies the nearest points of GeoPandas.DataFrame gdB in GeoPandas.DataFrame gdA. Indices need to be resorted before using this function.
 
@@ -456,7 +459,7 @@ class RegistryCreator:
             GeoDataFrame where overhanging PV installations have been enriched with the attributes of the closest
             rooftop
         """
-
+       
         raw_overhanging_pv_installations_enriched_with_closest_rooftop_data = (
             self._ckdnearest(
                 raw_overhanging_PV_installations,
@@ -470,8 +473,10 @@ class RegistryCreator:
             raw_overhanging_pv_installations_enriched_with_closest_rooftop_data
         )
 
+        
         # The value for the area of the intersected PV installation is updated by the area of the overhanging PV polygon
         # in order to aggregate the areas for a given rooftop later
+      
         raw_overhanging_pv_installations_enriched_with_closest_rooftop_data[
             "area_inter"
         ] = raw_overhanging_pv_installations_enriched_with_closest_rooftop_data[
@@ -528,7 +533,8 @@ class RegistryCreator:
             GeoDataFrame where overhanging PV installations have been enriched with the attributes of the closest
             rooftop and appended to raw_PV_installations_on_rooftop
         """
-
+        if raw_overhanging_PV_installations.empty:
+            return raw_PV_installations_on_rooftop
         # IMPORTANT: if ckdnearest is used always reset_index before
         raw_overhanging_PV_installations = raw_overhanging_PV_installations.reset_index(
             drop=True
@@ -675,6 +681,7 @@ class RegistryCreator:
         
         #added a conversion to int to avoid TypeError
         raw_PV_installations_on_rooftop['Tilt'] = pd.to_numeric(raw_PV_installations_on_rooftop['Tilt'], errors='coerce')
+        raw_PV_installations_on_rooftop["Tilt"].fillna(32, inplace=True)
 
         raw_PV_installations_on_rooftop["Tilt"][
             raw_PV_installations_on_rooftop["Tilt"] >= 60
@@ -682,7 +689,7 @@ class RegistryCreator:
         raw_PV_installations_on_rooftop["Tilt"][
             raw_PV_installations_on_rooftop["Tilt"] == 0
         ] = 32
-
+       
         return raw_PV_installations_on_rooftop
 
     def adjust_detected_pv_area_by_tilt(

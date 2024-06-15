@@ -56,9 +56,9 @@ class TileDownloader(object):
         # URL dummy for image request from open NRW server
         self.WMS_1 = 'https://wmts1.geoportail.lu/opendata/service?REQUEST=GetMap&VERSION=1.1.1&SERVICE=WMS&BBOX='
 
-        self.WMS_2 = '&SRS=EPSG:4326&format=image/png&layers=ortho_latest&WIDTH=4800&HEIGHT=4800&STYLES'
+        self.WMS_2 = '&SRS=EPSG:4326&format=image/png&layers=ortho_2019&WIDTH=4800&HEIGHT=4800&STYLES'
         
-        self.NUM_THREADS = 4
+        self.NUM_THREADS = 10
 
         download_threads = []
 

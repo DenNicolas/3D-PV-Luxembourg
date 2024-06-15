@@ -23,3 +23,4 @@ COPY . .
 
 # Set the entry point command for the container
 CMD ["/bin/bash"]
+
